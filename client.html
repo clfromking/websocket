@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .message{
+            width: 60%;
+            margin: 0 10px;
+            display: inline-block;
+            text-align: center;
+            height: 40px;
+            line-height: 40px;
+            font-size: 20px;
+            border-radius: 5px;
+            border: 1px solid #B3D33F;
+        }
+        .form{
+            width:100%;
+            position: fixed;
+            bottom: 300px;
+            left: 0;
+        }
+        .connect{
+            height: 40px;
+            vertical-align: top;
+            /* padding: 0; */
+            width: 80px;
+            font-size: 20px;
+            border-radius: 5px;
+            border: none;
+            background: #B3D33F;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <ul id="content"></ul>
+    <form class="form">
+        <input type="text" placeholder="请输入发送的消息" class="message" id="message"/>
+        <input type="button" value="发送" id="send" class="connect"/>
+        <input type="button" value="连接" id="connect" class="connect"/>
+    </form>
+</body>
+<script>
+    var ul = document.getElementById('content');
+    var message = document.getElementById('message');
+    var send = document.getElementById('send');
+    var connect = document.getElementById('connect');
+    var ws = null;
+    connect.onclick = function() {
+        ws = new WebSocket('ws://localhost:5000');
+        ws.onopen = function() {
+            ul.innerHTML += '<li>客户端已连接</li>';
+        }
+        ws.onopen = function(evt) {
+            ul.innerHTML += '<li>' + evt.data + '</li>'
+        }
+        ws.onclose = function() {
+            ul.innerHTML += '<li>客户端已断开连接</li>'
+        }
+        ws.onerror = function(evt) {
+            ul.innerHTML += '<li>' + evt.data + '</li>'
+        }
+    }
+
+    send.onclick = function() {
+        if(ws) {
+            ws.send(input.value)
+        }
+    }
+</script>
+</html>
